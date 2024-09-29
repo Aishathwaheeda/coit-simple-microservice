@@ -3,18 +3,7 @@ pipeline{
     stages{
         stage("Build"){
             steps{
-                sh 'cd coit-frontend && npm install && npm run build'
-            }
-        }
-        stage("Setup Env"){
-            steps{
-                sh "echo installation of apache2"
-                // sh "sudo apt-update && sudo apt-get install -y apache2"
-            }
-        }
-        stage("Deploy"){
-            steps{
-                sh "cd coit-frontend && cp build/* /var/www/html/"
+                sh 'cd coit-frontend && docker build -t aishathwaheeda/coit-frontend:v1 -f Dockerfile-multistage .'
             }
         }
         stage('docker-push') {
@@ -22,7 +11,13 @@ pipeline{
                 sh 'echo "pushing docker image"'
                 sh 'docker push aishathwaheeda/coit-frontend:v1'
             }        
-    }
+    }        
+        stage("Deploy"){
+            steps{
+                sh "cd coit-frontend && cp build/* /var/www/html/"
+            }
+        }
+        
    // post{
         // success{
         //     archiveArtifacts artifacts: '**/build', followSymlinks: false
@@ -40,4 +35,5 @@ pipeline{
         //                     Jenkins''', subject: 'Failed ${JOB_NAME}', to: 'basil@coit.io'
         // }
    // }
+}
 }
