@@ -17,7 +17,11 @@ pipeline{
                 sh "cd coit-frontend && cp build/* /var/www/html/"
             }
         }
-        
+        stage('docker-push') {
+            steps {
+                sh 'echo "pushing docker image"'
+                sh 'docker push aishathwaheeda/coit-frontend:v1'
+            }        
     }
    // post{
         // success{
